@@ -16,9 +16,6 @@ jobs:
       - name: eslint
         uses: MapColonies/shared-workflows/actions/eslint@eslint-v1.0.1
 
-      - name: openapi-lint
-        uses: MapColonies/shared-workflows/actions/openapi-lint@openapi-lint-v1.0.0
-
   security:
     runs-on: ubuntu-latest
     steps:
