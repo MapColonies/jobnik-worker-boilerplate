@@ -21,7 +21,7 @@ fullnameOverride: ""
 
 configManagement:
   offlineMode: false
-  name: 'service-name'
+  name: 'jobnik-worker-boilerplate'
   version: 'latest'
   serverUrl: 'http://localhost:8080/api'
 
@@ -64,7 +64,7 @@ caPath: '/usr/local/share/ca-certificates'
 caKey: 'ca.crt'
 
 image:
-  repository: ts-server-boilerplate
+  repository: jobnik-worker-boilerplate
   # If commented, appVersion will be taken. See: _helpers.tpl
   # tag: 'latest'
   pullPolicy: IfNotPresent
@@ -93,28 +93,3 @@ resources:
     requests:
       cpu: 100m
       memory: 128Mi
-
-route:
-  enabled: true
-  path: /
-  host: ''
-  timeout:
-    enabled: false  # defaults to 30s by openshift
-    duration: 60s  # supported units (us, ms, s, m, h, d)
-  rewriteTarget: ''
-  tls:
-    enabled: true
-    termination: edge
-    insecureEdgeTerminationPolicy: Redirect
-    useCerts: false
-    certificate: ''
-    key: ''
-    caCertificate: ''
-
-ingress:
-  enabled: false
-  path: /
-  host: 'localhost'
-  cors:
-    enabled: true
-    origin: '*'

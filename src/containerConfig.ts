@@ -1,14 +1,16 @@
 import { getOtelMixin } from '@map-colonies/telemetry';
 import { trace } from '@opentelemetry/api';
 import { Registry } from 'prom-client';
+import { instancePerContainerCachingFactory } from 'tsyringe';
 import { DependencyContainer } from 'tsyringe/dist/typings/types';
-import jsLogger from '@map-colonies/js-logger';
+import jsLogger, { Logger } from '@map-colonies/js-logger';
+import { JobnikSDK } from '@map-colonies/jobnik-sdk';
 import { InjectionObject, registerDependencies } from '@common/dependencyRegistration';
 import { SERVICES, SERVICE_NAME } from '@common/constants';
 import { getTracing } from '@common/tracing';
-import { resourceNameRouterFactory, RESOURCE_NAME_ROUTER_SYMBOL } from './resourceName/routes/resourceNameRouter';
-import { anotherResourceRouterFactory, ANOTHER_RESOURCE_ROUTER_SYMBOL } from './anotherResource/routes/anotherResourceRouter';
 import { getConfig } from './common/config';
+import { workerBuilder } from './worker';
+import { LogisticJobTypes, LogisticStageTypes } from './logistics/types';
 
 export interface RegisterOptions {
   override?: InjectionObject<unknown>[];
@@ -31,15 +33,34 @@ export const registerExternalValues = async (options?: RegisterOptions): Promise
     { token: SERVICES.LOGGER, provider: { useValue: logger } },
     { token: SERVICES.TRACER, provider: { useValue: tracer } },
     { token: SERVICES.METRICS, provider: { useValue: metricsRegistry } },
-    { token: RESOURCE_NAME_ROUTER_SYMBOL, provider: { useFactory: resourceNameRouterFactory } },
-    { token: ANOTHER_RESOURCE_ROUTER_SYMBOL, provider: { useFactory: anotherResourceRouterFactory } },
+    {
+      token: SERVICES.JOBNIK_SDK,
+      provider: {
+        useFactory: instancePerContainerCachingFactory((container) => {
+          const logger = container.resolve<Logger>(SERVICES.LOGGER);
+          const config = container.resolve<typeof configInstance>(SERVICES.CONFIG);
+          return new JobnikSDK<LogisticJobTypes, LogisticStageTypes>({
+            baseUrl: 'http://localhost:3000',
+            httpClientOptions: {},
+            logger,
+          });
+        }),
+      },
+    },
+    {
+      token: SERVICES.WORKER,
+      provider: {
+        useFactory: instancePerContainerCachingFactory(workerBuilder),
+      },
+    },
+
     {
       token: 'onSignal',
       provider: {
-        useValue: {
-          useValue: async (): Promise<void> => {
+        useFactory: () => {
+          return async (): Promise<void> => {
             await Promise.all([getTracing().stop()]);
-          },
+          };
         },
       },
     },
