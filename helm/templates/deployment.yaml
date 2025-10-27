@@ -81,10 +81,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ printf "%s-configmap" (include "jobnik-worker-boilerplate.fullname" .) }}
-          ports:
-            - name: http
-              containerPort: {{ .Values.env.targetPort }}
-              protocol: {{ .Values.env.protocol }}
           {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
@@ -111,9 +107,6 @@ spec:
         {{ tpl (toYaml .Values.sidecars) . | nindent 8 }}
         {{- end }}
       volumes:
-        - name: nginx-config
-          configMap:
-            name: 'nginx-extra-configmap'      
         {{- if .Values.caSecretName }}
         - name: root-ca
           secret:

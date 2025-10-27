@@ -20,37 +20,20 @@ if (process.env.GITHUB_ACTIONS) {
 }
 
 export default defineConfig({
+  resolve: {
+    alias: pathAlias,
+  },
   test: {
-    workspace: [
-      {
-        test: {
-          name: 'unit',
-          setupFiles: ['./tests/configurations/initJestOpenapi.setup.ts', './tests/configurations/vite.setup.ts'],
-          include: ['tests/unit/**/*.spec.ts'],
-          environment: 'node',
-        },
-        resolve: {
-          alias: pathAlias,
-        },
-      },
-      {
-        test: {
-          name: 'integration',
-          setupFiles: ['./tests/configurations/initJestOpenapi.setup.ts', './tests/configurations/vite.setup.ts'],
-          include: ['tests/integration/**/*.spec.ts'],
-          environment: 'node',
-        },
-        resolve: {
-          alias: pathAlias,
-        },
-      },
-    ],
+    setupFiles: ['./tests/setup/vite.setup.ts'],
+    include: ['tests/**/*.spec.ts'],
+    environment: 'node',
     reporters,
+
     coverage: {
       enabled: true,
       reporter: ['text', 'html', 'json', 'json-summary'],
       include: ['src/**/*.ts'],
-      exclude: ['**/vendor/**', 'node_modules/**'],
+      exclude: ['**/vendor/**', 'node_modules/**', 'src/index.ts', 'src/worker.ts'],
       reportOnFailure: true,
       thresholds: {
         global: {

@@ -4,11 +4,11 @@ import { Registry } from 'prom-client';
 import { instancePerContainerCachingFactory } from 'tsyringe';
 import { DependencyContainer } from 'tsyringe/dist/typings/types';
 import jsLogger, { Logger } from '@map-colonies/js-logger';
-import { JobnikSDK } from '@map-colonies/jobnik-sdk';
+import { IWorker, JobnikSDK } from '@map-colonies/jobnik-sdk';
 import { InjectionObject, registerDependencies } from '@common/dependencyRegistration';
 import { SERVICES, SERVICE_NAME } from '@common/constants';
 import { getTracing } from '@common/tracing';
-import { getConfig } from './common/config';
+import { ConfigType, getConfig } from './common/config';
 import { workerBuilder } from './worker';
 import { LogisticJobTypes, LogisticStageTypes } from './logistics/types';
 
@@ -38,10 +38,9 @@ export const registerExternalValues = async (options?: RegisterOptions): Promise
       provider: {
         useFactory: instancePerContainerCachingFactory((container) => {
           const logger = container.resolve<Logger>(SERVICES.LOGGER);
-          const config = container.resolve<typeof configInstance>(SERVICES.CONFIG);
+          const config = container.resolve<ConfigType>(SERVICES.CONFIG);
           return new JobnikSDK<LogisticJobTypes, LogisticStageTypes>({
-            baseUrl: 'http://localhost:3000',
-            httpClientOptions: {},
+            ...config.get('jobnik.sdk'),
             logger,
           });
         }),
@@ -57,9 +56,10 @@ export const registerExternalValues = async (options?: RegisterOptions): Promise
     {
       token: 'onSignal',
       provider: {
-        useFactory: () => {
+        useFactory: (container) => {
+          const worker = container.resolve<IWorker>(SERVICES.WORKER);
           return async (): Promise<void> => {
-            await Promise.all([getTracing().stop()]);
+            await Promise.all([getTracing().stop(), worker.stop()]);
           };
         },
       },
