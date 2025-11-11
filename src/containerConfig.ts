@@ -39,9 +39,11 @@ export const registerExternalValues = async (options?: RegisterOptions): Promise
         useFactory: instancePerContainerCachingFactory((container) => {
           const logger = container.resolve<Logger>(SERVICES.LOGGER);
           const config = container.resolve<ConfigType>(SERVICES.CONFIG);
+          const metricsRegistry = container.resolve<Registry>(SERVICES.METRICS);
           return new JobnikSDK<LogisticJobTypes, LogisticStageTypes>({
             ...config.get('jobnik.sdk'),
             logger,
+            metricsRegistry,
           });
         }),
       },
