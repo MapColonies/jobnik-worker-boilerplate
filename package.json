@@ -34,10 +34,10 @@
   "dependencies": {
     "@godaddy/terminus": "^4.12.1",
     "@map-colonies/config": "^3.0.0",
-    "@map-colonies/jobnik-sdk": "/home/oferade/repos/libot/jobnik-sdk",
+    "@map-colonies/jobnik-sdk": "^0.1.0",
     "@map-colonies/js-logger": "^3.0.2",
     "@map-colonies/read-pkg": "^1.0.0",
-    "@map-colonies/schemas": "/home/oferade/repos/libot/schemas",
+    "@map-colonies/schemas": "^1.13.0",
     "@map-colonies/telemetry": "^10.0.1",
     "@opentelemetry/api": "^1.9.0",
     "compression": "^1.8.0",
