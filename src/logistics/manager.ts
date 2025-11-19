@@ -1,4 +1,4 @@
-import { setTimeout as sleep } from 'node:timers/promises';
+// import { setTimeout as sleep } from 'node:timers/promises';
 import type { Task, TaskHandlerContext } from '@map-colonies/jobnik-sdk';
 import { injectable } from 'tsyringe';
 import type { LogisticJobTypes, LogisticStageTypes } from './types';
@@ -6,7 +6,7 @@ import type { LogisticJobTypes, LogisticStageTypes } from './types';
 async function pickupPackage(): Promise<void> {
   // eslint-disable-next-line @typescript-eslint/no-magic-numbers
   const randomDelay = Math.floor(Math.random() * 120000);
-  await sleep(randomDelay);
+  await new Promise((resolve) => setTimeout(resolve, randomDelay));
 }
 
 @injectable()

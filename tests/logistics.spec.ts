@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import jsLogger from '@map-colonies/js-logger';
 import { trace } from '@opentelemetry/api';
 import { initConfig } from '@src/common/config';
@@ -11,7 +11,12 @@ describe('Logistics', function () {
   let taskHandler: LogisticsManager['handleDeliveryTask'];
 
   beforeAll(async function () {
-    await initConfig(true);
+    try {
+      await initConfig(true);
+    } catch (error) {
+      console.error('Failed to initialize config in tests:', error);
+      throw error;
+    }
   });
 
   beforeEach(async function () {
@@ -22,6 +27,8 @@ describe('Logistics', function () {
       ],
       useChild: true,
     });
+
+    vi.useFakeTimers();
 
     const logisticsManager = container.resolve(LogisticsManager);
     taskHandler = logisticsManager.handleDeliveryTask.bind(logisticsManager);
@@ -39,6 +46,8 @@ describe('Logistics', function () {
       context.updateStageUserMetadata.mockResolvedValue(undefined);
 
       const result = taskHandler(fakeTask, context);
+
+      await vi.runAllTimers();
 
       await expect(result).resolves.toBeUndefined();
     });
