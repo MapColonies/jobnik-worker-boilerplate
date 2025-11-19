@@ -47,7 +47,7 @@ describe('Logistics', function () {
 
       const result = taskHandler(fakeTask, context);
 
-      await vi.runAllTimers();
+      vi.runAllTimers();
 
       await expect(result).resolves.toBeUndefined();
     });
