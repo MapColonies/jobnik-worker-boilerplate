@@ -4,8 +4,7 @@
       "baseUrl": "http://localhost:8081"
     },
     "worker": {
-      "concurrency": 2,
-      "pullingInterval": 10000
+      "concurrency": 2
     }
   }
 }

@@ -4,8 +4,6 @@
   "description": "This is template for map colonies jobnik worker service",
   "main": "./src/index.ts",
   "scripts": {
-    "test:unit": "vitest run --coverage.enabled=false --project unit",
-    "test:integration": "vitest run --coverage.enabled=false --project integration",
     "test": "vitest run",
     "test:watch": "vitest watch",
     "test:ui": "vitest --ui",
