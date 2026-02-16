@@ -2,7 +2,7 @@
 import 'reflect-metadata';
 import { createServer } from 'node:http';
 import express from 'express';
-import { metricsMiddleware } from '@map-colonies/telemetry/prom-metrics';
+import { metricsMiddleware } from '@map-colonies/prometheus';
 import { createTerminus } from '@godaddy/terminus';
 import { Logger } from '@map-colonies/js-logger';
 import type { IWorker } from '@map-colonies/jobnik-sdk';
