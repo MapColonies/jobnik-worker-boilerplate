@@ -1,5 +1,5 @@
 import { defineConfig, ViteUserConfig } from 'vitest/config';
-import tsconfig from './tsconfig.json';
+import tsconfig from './tsconfig.json' with { type: 'json' };
 import path from 'path';
 
 // Create an alias object from the paths in tsconfig.json
@@ -9,7 +9,7 @@ const pathAlias = Object.fromEntries(
     // Remove the "/*" from the key and resolve the path
     key.replace('/*', ''),
     // Remove the "/*" from the value Resolve the relative path
-    path.resolve(__dirname, value.replace('/*', '')),
+    path.resolve(import.meta.dirname, value.replace('/*', '')),
   ])
 );
 
