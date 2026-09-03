@@ -1,4 +1,5 @@
 import tsBaseConfig from '@map-colonies/eslint-config/ts-base';
-import { config } from '@map-colonies/eslint-config/helpers';
+import { defineConfig } from 'eslint/config';
+import vitestConfig from '@map-colonies/eslint-config/vitest';
 
-export default config(tsBaseConfig, { ignores: ['vitest.config.mts'] });
+export default defineConfig(vitestConfig, tsBaseConfig, { ignores: ['vitest.config.mts'] });

@@ -2,7 +2,7 @@ import { simpleFaker } from '@faker-js/faker';
 import merge from 'deepmerge';
 import type { ApiClient, IProducer, Job, JobId, Stage, StageId, Task, TaskId } from '@map-colonies/jobnik-sdk';
 import type { PartialDeep } from 'type-fest';
-import jsLogger from '@map-colonies/js-logger';
+import { jsLogger } from '@map-colonies/js-logger';
 import { vitest } from 'vitest';
 import type { LogisticJobTypes, LogisticStageTypes } from '@src/logistics/types';
 
@@ -18,6 +18,9 @@ export function createFakeHazmatTransportJob(override: PartialDeep<HazmatTranspo
     id: simpleFaker.string.uuid() as JobId,
     name: 'hazmatTransport',
     status: 'IN_PROGRESS',
+    percentage: 50,
+    priority: 'HIGH',
+    updateTime: simpleFaker.date.recent().toISOString(),
     creationTime: simpleFaker.date.past().toISOString(),
     data: {
       unNumber: `UN${simpleFaker.number.int({ min: 1000, max: 9999 })}`,
@@ -40,6 +43,7 @@ export function createFakeDeliveryStage(override: PartialDeep<DeliveryStage> = {
     status: 'IN_PROGRESS',
     jobId: simpleFaker.string.uuid() as JobId,
     order: simpleFaker.number.int({ min: 1, max: 10 }),
+    percentage: 50,
     summary: {
       pending: 0,
       inProgress: 1,
@@ -66,6 +70,7 @@ export function createFakePickupTask(override: PartialDeep<DeliveryTask> = {}): 
   const task: DeliveryTask = {
     attempts: 0,
     creationTime: simpleFaker.date.past().toISOString(),
+    updateTime: simpleFaker.date.recent().toISOString(),
     id: simpleFaker.string.uuid() as TaskId,
     stageId: simpleFaker.string.uuid() as StageId,
     data: {

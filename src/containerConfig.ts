@@ -1,9 +1,9 @@
-import { getOtelMixin } from '@map-colonies/telemetry';
+import { getOtelMixin } from '@map-colonies/tracing-utils';
 import { trace } from '@opentelemetry/api';
 import { Registry } from 'prom-client';
 import { instancePerContainerCachingFactory } from 'tsyringe';
 import { DependencyContainer } from 'tsyringe/dist/typings/types';
-import jsLogger, { Logger } from '@map-colonies/js-logger';
+import { Logger, jsLogger } from '@map-colonies/js-logger';
 import { IWorker, JobnikSDK } from '@map-colonies/jobnik-sdk';
 import { InjectionObject, registerDependencies } from '@common/dependencyRegistration';
 import { SERVICES, SERVICE_NAME } from '@common/constants';
